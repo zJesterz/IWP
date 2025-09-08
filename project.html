@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Department Academics</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo-box">
+        <h2 class="logo">ERP SYSTEM<br><span>CS & AIML</span></h2>
+      </div>
+      <nav>
+        <button>OVERVIEW</button>
+        <button>STUDENTS</button>
+        <button>FACULTY</button>
+        <button class="active">ACADEMICS</button>
+        <button>LAB & PROJECTS</button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <header class="top-header">
+        <h1>DEPARTMENT ACADEMICS</h1>
+        <button class="add-course">+ Add Course</button>
+      </header>
+
+      <section class="summary-cards">
+        <div class="card blue">Total Courses <span>89</span></div>
+        <div class="card yellow">AIML Courses <span>42</span></div>
+        <div class="card green">CS Courses <span>47</span></div>
+      </section>
+
+      <div class="search-bar">
+        <input type="text" placeholder="Enter Course Name">
+      </div>
+
+      <section class="courses">
+        <div class="course-card">
+          <div>
+            <div class="code-tag">
+              <strong>CS101</strong> <span class="badge">Computer Science</span>
+            </div>
+            <h3>Introduction to Programming</h3>
+            <p>1st Semester · 4 Credits</p>
+            <p>👥 85 students</p>
+            <p>📅 Mon, Wed, Fri - 9:00 AM</p>
+          </div>
+          <div class="prof">Dr. Priya Mehta<br><span>Faculty</span></div>
+        </div>
+
+        <div class="course-card">
+          <div>
+            <div class="code-tag">
+              <strong>AI201</strong> <span class="badge aiml">AIML</span>
+            </div>
+            <h3>Machine Learning Fundamentals</h3>
+            <p>3rd Semester · 4 Credits</p>
+            <p>👥 67 students</p>
+            <p>📅 Tue, Thu - 2:00 PM</p>
+          </div>
+          <div class="prof">Dr. Rajesh Kumar<br><span>Faculty</span></div>
+        </div>
+      </section>
+
+      <aside class="events">
+        <h3>📅 Upcoming Events</h3>
+        <div class="event">
+          <strong>Mid-term Examinations</strong>
+          <p>All departments</p>
+          <span>March 15–22, 2024</span>
+        </div>
+        <div class="event">
+          <strong>Research Paper Presentation</strong>
+          <p>AIML Department</p>
+          <span>March 28, 2024</span>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const searchInput = document.querySelector('.search-bar input');
+    const courseCards = document.querySelectorAll('.course-card');
+
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.toLowerCase();
+
+      courseCards.forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const code = card.querySelector('.code-tag strong').textContent.toLowerCase();
+        const match = title.includes(query) || code.includes(query);
+        card.style.display = match ? 'block' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
