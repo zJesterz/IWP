@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ERP System - Register</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #dbeafe, #e0f2fe, #ede9fe);
+
+    }
+
+    .register-container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .register-container h2 {
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    .input-group {
+      position: relative;
+      margin: 15px 0;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 40px 12px 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      outline: none;
+      font-size: 15px;
+      transition: border-color 0.3s;
+    }
+
+    .input-group input:focus {
+      border-color: #3498db;
+    }
+
+    .input-group i {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #3498db;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background: #2980b9;
+      transform: translateY(-2px);
+    }
+
+    .extra-links {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .extra-links a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    .extra-links a:hover {
+      text-decoration: underline;
+    }
+
+    .error-msg {
+      color: red;
+      font-size: 14px;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    .success-msg {
+      color: green;
+      font-size: 14px;
+      margin-bottom: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <h2>Create Account</h2>
+    <div id="error" class="error-msg">Please fill all fields correctly</div>
+    <div id="success" class="success-msg">Account created successfully!</div>
+
+    <form id="registerForm">
+      <div class="input-group">
+        <input type="text" id="fullname" placeholder="Full Name" required>
+        <i class="fas fa-user"></i>
+      </div>
+      <div class="input-group">
+        <input type="email" id="email" placeholder="Email Address" required>
+        <i class="fas fa-envelope"></i>
+      </div>
+      <div class="input-group">
+        <input type="text" id="username" placeholder="Username" required>
+        <i class="fas fa-id-badge"></i>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Password" required>
+        <i class="fas fa-lock"></i>
+      </div>
+      <div class="input-group">
+        <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+        <i class="fas fa-lock"></i>
+      </div>
+
+      <button type="submit" class="btn">Register</button>
+      <div class="extra-links">
+        <p>Already have an account? <a href="login.html">Login</a></p>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", function(event){
+      event.preventDefault();
+
+      const fullname = document.getElementById("fullname").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      const error = document.getElementById("error");
+      const success = document.getElementById("success");
+
+      error.style.display = "none";
+      success.style.display = "none";
+
+      if (!fullname || !email || !username || !password || !confirmPassword) {
+        error.innerText = "All fields are required!";
+        error.style.display = "block";
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        error.innerText = "Passwords do not match!";
+        error.style.display = "block";
+        return;
+      }
+
+      // Simulate successful account creation
+      success.innerText = "Account created successfully!";
+      success.style.display = "block";
+      document.getElementById("registerForm").reset();
+    });
+  </script>
+</body>
+</html>

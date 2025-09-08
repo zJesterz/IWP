@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ERP System - Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #dbeafe, #e0f2fe, #ede9fe); 
+    }
+
+
+    .login-container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-container h2 {
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    .input-group {
+      position: relative;
+      margin: 15px 0;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 40px 12px 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      outline: none;
+      font-size: 15px;
+      transition: border-color 0.3s;
+    }
+
+    .input-group input:focus {
+      border-color: #3498db;
+    }
+
+    .input-group i {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+    }
+
+    .captcha-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 15px 0;
+    }
+
+    .captcha-text {
+      background: #ecf0f1;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      font-size: 18px;
+      user-select: none;
+    }
+
+    .refresh-btn {
+      background: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .refresh-btn:hover {
+      background: #2980b9;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #3498db;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background: #2980b9;
+      transform: translateY(-2px);
+    }
+
+    .extra-links {
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+    .extra-links a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    .extra-links a:hover {
+      text-decoration: underline;
+    }
+
+    .error-msg {
+      color: red;
+      font-size: 14px;
+      margin-bottom: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>ERP System Login</h2>
+    <div id="error" class="error-msg">Invalid Username, Password, or Captcha</div>
+    <form id="loginForm">
+      <div class="input-group">
+        <input type="text" id="username" placeholder="Username" required>
+        <i class="fas fa-user"></i>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Password" required>
+        <i class="fas fa-lock"></i>
+      </div>
+
+      <div class="captcha-box">
+        <span id="captcha" class="captcha-text"></span>
+        <button type="button" class="refresh-btn" onclick="generateCaptcha()">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+      </div>
+      <div class="input-group">
+        <input type="text" id="captchaInput" placeholder="Enter Captcha" required>
+        <i class="fas fa-shield-alt"></i>
+      </div>
+
+      <button type="submit" class="btn">Login</button>
+      <div class="extra-links">
+        <a href="forgetten.html">Forgot Password?</a>
+        <a href="registerpage.html">Create Account</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    let captchaText = "";
+
+    function generateCaptcha() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      captchaText = "";
+      for (let i = 0; i < 6; i++) {
+        captchaText += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById("captcha").innerText = captchaText;
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", function(event){
+      event.preventDefault();
+
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const captchaInput = document.getElementById("captchaInput").value;
+      const error = document.getElementById("error");
+
+      if(username === "admin" && password === "1234" && captchaInput === captchaText){
+        alert("Login Successful!");
+        window.location.href = "dashboard.html"; 
+      } else {
+        error.style.display = "block";
+        generateCaptcha(); 
+      }
+    });
+
+    window.onload = generateCaptcha;
+  </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ERP System - Forgot Password</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #dbeafe, #e0f2fe, #ede9fe); /* calm pastel gradient */
+    }
+
+    .forgot-container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .forgot-container h2 {
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+
+    .forgot-container p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      position: relative;
+      margin: 15px 0;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 40px 12px 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      outline: none;
+      font-size: 15px;
+      transition: border-color 0.3s;
+    }
+
+    .input-group input:focus {
+      border-color: #3498db;
+    }
+
+    .input-group i {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #3498db;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      margin-top: 15px;
+    }
+
+    .btn:hover {
+      background: #2980b9;
+      transform: translateY(-2px);
+    }
+
+    .extra-links {
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+    .extra-links a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    .extra-links a:hover {
+      text-decoration: underline;
+    }
+
+    .success-msg {
+      color: green;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="forgot-container">
+    <h2>Forgot Password</h2>
+    <p>Enter your registered email address and we’ll send you instructions to reset your password.</p>
+    <form id="forgotForm">
+      <div class="input-group">
+        <input type="email" id="email" placeholder="Enter your email" required>
+        <i class="fas fa-envelope"></i>
+      </div>
+      <button type="submit" class="btn">Send Reset Link</button>
+      <div class="extra-links">
+        <a href="login.html">Back to Login</a>
+        <a href="registerpage.html">Create Account</a>
+      </div>
+      <div id="success" class="success-msg">✅ Reset link sent to your email!</div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("forgotForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      document.getElementById("success").style.display = "block";
+    });
+  </script>
+</body>
+</html>
