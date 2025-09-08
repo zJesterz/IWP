@@ -1,15 +1,340 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Department Academics</title>
-  <link rel="stylesheet" href="style.css">
+  <title>ERP System - Department Academics</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      display: flex;
+      background: linear-gradient(135deg, #f7f7f9, #e8eef7, #dbeafe);
+      color: #333;
+      min-height: 100vh;
+    }
+
+    .layout {
+      display: flex;
+      width: 100%;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: #fff;
+      width: 260px;
+      min-height: 100vh;
+      padding: 0;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      border-right: 1px solid #e1e8ed;
+    }
+
+    .logo-section {
+      background: linear-gradient(135deg, #3f51b5, #2c3e91);
+      padding: 30px 20px;
+      text-align: center;
+      color: white;
+    }
+
+    .logo-section h2 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
+    }
+
+    .logo-section span {
+      font-size: 14px;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+
+    .sidebar nav {
+      padding: 20px 0;
+    }
+
+    .sidebar nav button {
+      background: none;
+      color: #555;
+      border: none;
+      padding: 15px 25px;
+      margin: 2px 15px;
+      width: calc(100% - 30px);
+      text-align: left;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      letter-spacing: 0.3px;
+    }
+
+    .sidebar nav button:hover {
+      background: #f8f9fa;
+      color: #3f51b5;
+      transform: translateX(5px);
+    }
+
+    .sidebar nav .active {
+      background: linear-gradient(135deg, #3f51b5, #2c3e91);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(63, 81, 181, 0.3);
+    }
+
+    /* Main Content */
+    .main {
+      flex: 1;
+      padding: 30px 40px;
+      overflow-y: auto;
+    }
+
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .top-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #3f51b5;
+      letter-spacing: 0.5px;
+    }
+
+    .add-course {
+      background: linear-gradient(135deg, #3f51b5, #2c3e91);
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.3px;
+    }
+
+    .add-course:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(63, 81, 181, 0.3);
+    }
+
+    /* Summary Cards */
+    .summary-cards {
+      display: flex;
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .summary-card {
+      flex: 1;
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border-left: 5px solid;
+      transition: transform 0.3s ease;
+    }
+
+    .summary-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .summary-card.blue { border-color: #3f51b5; }
+    .summary-card.yellow { border-color: #fbc02d; }
+    .summary-card.green { border-color: #4caf50; }
+
+    .summary-card h3 {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .summary-card .count {
+      font-size: 32px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    /* Search */
+    .search-section {
+      margin-bottom: 30px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #e1e8ed;
+      border-radius: 12px;
+      font-size: 15px;
+      background: #fff;
+      transition: all 0.3s ease;
+    }
+
+    .search-bar input:focus {
+      outline: none;
+      border-color: #3f51b5;
+      box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+    }
+
+    /* Courses */
+    .courses-section {
+      display: flex;
+      gap: 30px;
+    }
+
+    .courses-list {
+      flex: 2;
+    }
+
+    .course-card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+    }
+
+    .course-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      border-left-color: #3f51b5;
+    }
+
+    .course-info .code-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .course-code {
+      font-weight: 700;
+      font-size: 16px;
+      color: #3f51b5;
+    }
+
+    .department-badge {
+      background: #e8eef7;
+      color: #3f51b5;
+      padding: 4px 12px;
+      font-size: 11px;
+      border-radius: 20px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .department-badge.aiml {
+      background: #fff3e0;
+      color: #f57c00;
+    }
+
+    .course-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .course-details {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .course-details p {
+      margin: 4px 0;
+    }
+
+    .faculty-info {
+      text-align: right;
+      color: #3f51b5;
+      font-weight: 600;
+    }
+
+    .faculty-info span {
+      display: block;
+      font-size: 12px;
+      color: #888;
+      font-weight: 400;
+      margin-top: 4px;
+    }
+
+    /* Events Sidebar */
+    .events-sidebar {
+      flex: 1;
+      max-width: 350px;
+    }
+
+    .events-card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      position: sticky;
+      top: 30px;
+    }
+
+    .events-card h3 {
+      color: #3f51b5;
+      font-size: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .event-item {
+      padding: 15px 0;
+      border-bottom: 1px solid #f0f0f0;
+      margin-bottom: 15px;
+    }
+
+    .event-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .event-title {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .event-department {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .event-date {
+      color: #3f51b5;
+      font-size: 12px;
+      font-weight: 500;
+      background: #f8f9ff;
+      padding: 4px 8px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="logo-box">
-        <h2 class="logo">ERP SYSTEM<br><span>CS & AIML</span></h2>
+      <div class="logo-section">
+        <h2>ERP SYSTEM<br><span>CS & AIML</span></h2>
       </div>
       <nav>
         <button>OVERVIEW</button>
@@ -28,56 +353,81 @@
       </header>
 
       <section class="summary-cards">
-        <div class="card blue">Total Courses <span>89</span></div>
-        <div class="card yellow">AIML Courses <span>42</span></div>
-        <div class="card green">CS Courses <span>47</span></div>
-      </section>
-
-      <div class="search-bar">
-        <input type="text" placeholder="Enter Course Name">
-      </div>
-
-      <section class="courses">
-        <div class="course-card">
-          <div>
-            <div class="code-tag">
-              <strong>CS101</strong> <span class="badge">Computer Science</span>
-            </div>
-            <h3>Introduction to Programming</h3>
-            <p>1st Semester · 4 Credits</p>
-            <p>👥 85 students</p>
-            <p>📅 Mon, Wed, Fri - 9:00 AM</p>
-          </div>
-          <div class="prof">Dr. Priya Mehta<br><span>Faculty</span></div>
+        <div class="summary-card blue">
+          <h3>Total Courses</h3>
+          <div class="count">89</div>
         </div>
-
-        <div class="course-card">
-          <div>
-            <div class="code-tag">
-              <strong>AI201</strong> <span class="badge aiml">AIML</span>
-            </div>
-            <h3>Machine Learning Fundamentals</h3>
-            <p>3rd Semester · 4 Credits</p>
-            <p>👥 67 students</p>
-            <p>📅 Tue, Thu - 2:00 PM</p>
-          </div>
-          <div class="prof">Dr. Rajesh Kumar<br><span>Faculty</span></div>
+        <div class="summary-card yellow">
+          <h3>AIML Courses</h3>
+          <div class="count">42</div>
+        </div>
+        <div class="summary-card green">
+          <h3>CS Courses</h3>
+          <div class="count">47</div>
         </div>
       </section>
 
-      <aside class="events">
-        <h3>📅 Upcoming Events</h3>
-        <div class="event">
-          <strong>Mid-term Examinations</strong>
-          <p>All departments</p>
-          <span>March 15–22, 2024</span>
+      <section class="search-section">
+        <div class="search-bar">
+          <input type="text" placeholder="Search courses by name or code...">
         </div>
-        <div class="event">
-          <strong>Research Paper Presentation</strong>
-          <p>AIML Department</p>
-          <span>March 28, 2024</span>
+      </section>
+
+      <section class="courses-section">
+        <div class="courses-list">
+          <div class="course-card">
+            <div class="course-info">
+              <div class="code-section">
+                <span class="course-code">CS101</span>
+                <span class="department-badge">Computer Science</span>
+              </div>
+              <h3 class="course-title">Introduction to Programming</h3>
+              <div class="course-details">
+                <p>1st Semester · 4 Credits</p>
+                <p>👥 85 students</p>
+                <p>📅 Mon, Wed, Fri - 9:00 AM</p>
+              </div>
+            </div>
+            <div class="faculty-info">
+              Dr. Priya Mehta<br><span>Faculty</span>
+            </div>
+          </div>
+
+          <div class="course-card">
+            <div class="course-info">
+              <div class="code-section">
+                <span class="course-code">AI201</span>
+                <span class="department-badge aiml">AIML</span>
+              </div>
+              <h3 class="course-title">Machine Learning Fundamentals</h3>
+              <div class="course-details">
+                <p>3rd Semester · 4 Credits</p>
+                <p>👥 67 students</p>
+                <p>📅 Tue, Thu - 2:00 PM</p>
+              </div>
+            </div>
+            <div class="faculty-info">
+              Dr. Rajesh Kumar<br><span>Faculty</span>
+            </div>
+          </div>
         </div>
-      </aside>
+
+        <aside class="events-sidebar">
+          <div class="events-card">
+            <h3>📅 Upcoming Events</h3>
+            <div class="event-item">
+              <div class="event-title">Mid-term Examinations</div>
+              <div class="event-department">All departments</div>
+              <div class="event-date">March 15—22, 2024</div>
+            </div>
+            <div class="event-item">
+              <div class="event-title">Research Paper Presentation</div>
+              <div class="event-department">AIML Department</div>
+              <div class="event-date">March 28, 2024</div>
+            </div>
+          </div>
+        </aside>
+      </section>
     </main>
   </div>
 
@@ -89,10 +439,10 @@
       const query = searchInput.value.toLowerCase();
 
       courseCards.forEach(card => {
-        const title = card.querySelector('h3').textContent.toLowerCase();
-        const code = card.querySelector('.code-tag strong').textContent.toLowerCase();
+        const title = card.querySelector('.course-title').textContent.toLowerCase();
+        const code = card.querySelector('.course-code').textContent.toLowerCase();
         const match = title.includes(query) || code.includes(query);
-        card.style.display = match ? 'block' : 'none';
+        card.style.display = match ? 'flex' : 'none';
       });
     });
   </script>
