@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ERP System - CSE & AIML</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  body { display:flex; min-height:100vh; background-color:#f5f7fa; color:#333; }
+
+  /* Sidebar */
+  .sidebar{
+    width:250px; height:100vh; display:flex; flex-direction:column;
+    background:linear-gradient(135deg,#2c3e50,#1a2530); position:sticky; top:0;
+  }
+  .logo{ padding:25px 20px; background:#000; text-align:center; color:#fff; flex:0 0 auto; }
+  .logo h1{ font-size:22px; margin-bottom:5px; font-weight:600; }
+  .logo p{ font-size:14px; color:#ccc; }
+  .nav-links{ flex:1 1 auto; display:flex; flex-direction:column; justify-content:space-evenly; padding:18px 12px; background-color:#fff; }
+  .nav-item{ padding:15px 18px; display:flex; align-items:center; color:#111; text-decoration:none; transition:all .25s ease; border-left:4px solid transparent; border-radius:10px; }
+  .nav-item:hover, .nav-item.active{ background:rgba(0,0,0,0.03); border-left-color:#3498db; }
+  .nav-item i{ margin-right:12px; font-size:18px; width:24px; text-align:center; }
+
+  /* Main content */
+  .main-content{ flex:1; padding:25px; overflow-y:auto; }
+  .header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; padding-bottom:20px; border-bottom:1px solid #e0e6ed; }
+  .header h2{ font-size:28px; color:#2c3e50; font-weight:600; }
+  .search-box{ display:flex; align-items:center; background:#fff; border-radius:30px; padding:8px 20px; box-shadow:0 2px 10px rgba(0,0,0,0.08); width:320px; }
+  .search-box input{ border:none; outline:none; padding:8px 12px; width:100%; font-size:15px; background:transparent; }
+
+  /* Stats cards */
+  .stats-container{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:25px; margin-bottom:35px; }
+  .stat-card{ background:#fff; border-radius:12px; padding:25px; box-shadow:0 5px 15px rgba(0,0,0,0.08); display:flex; align-items:center; }
+  .stat-icon{ width:65px; height:65px; border-radius:15px; display:flex; align-items:center; justify-content:center; margin-right:20px; font-size:26px; }
+  .stat-icon.blue{ background:#e3f2fd; color:#1976d2; }
+  .stat-icon.green{ background:#e8f5e9; color:#388e3c; }
+  .stat-icon.purple{ background:#f3e5f5; color:#7b1fa2; }
+  .stat-icon.orange{ background:#fff3e0; color:#f57c00; }
+  .stat-info h3{ font-size:28px; margin-bottom:8px; color:#2c3e50; }
+  .stat-info p{ color:#666; font-size:15px; }
+
+  /* Table */
+  .table-container{ background:#fff; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.08); overflow:hidden; margin-top:20px; }
+  .table-header{ padding:25px; border-bottom:1px solid #e0e6ed; display:flex; justify-content:space-between; align-items:center; }
+  .table-header h3{ font-size:22px; color:#2c3e50; }
+  .table-header p{ color:#666; font-size:15px; }
+  table{ width:100%; border-collapse:collapse; }
+  th, td{ padding:18px 25px; text-align:left; border-bottom:1px solid #e0e6ed; }
+  th{ background:#f8f9fa; font-weight:600; color:#2c3e50; font-size:15px; }
+  tr:hover{ background:#f8f9fa; }
+  .status{ padding:7px 14px; border-radius:20px; font-size:13px; font-weight:500; }
+  .status.active{ background:#e8f5e9; color:#388e3c; }
+  .btn{ padding:10px 18px; border:none; border-radius:6px; cursor:pointer; font-weight:500; transition:all .3s ease; }
+  .btn-view{ background:#e3f2fd; color:#1976d2; }
+  .btn-view:hover{ background:#bbdefb; transform:translateY(-2px); }
+
+  /* Modal */
+  #studentModal{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000; }
+  .modal-content{ background:#fff; padding:25px 30px; border-radius:10px; width:400px; max-width:90%; position:relative; }
+  #closeModal{ position:absolute; top:10px; right:15px; font-size:22px; cursor:pointer; color:#333; }
+  .modal-content p{ margin:10px 0; font-size:15px; }
+  .modal-content h2{ margin-bottom:15px; }
+
+  /* Responsive tweaks */
+  @media (max-width:992px){ body{ flex-direction:column; } .sidebar{ width:100%; height:auto; } .nav-links{ flex-direction:row; justify-content:flex-start; gap:8px; padding:12px; overflow-x:auto; background:#fff; } .nav-item{ white-space:nowrap; } }
+  @media (max-width:768px){ .header{ flex-direction:column; align-items:flex-start; } .search-box{ width:100%; margin-top:16px; } .stats-container{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <h1>ERP System</h1>
+    <p>CSE & AIML</p>
+  </div>
+  <nav class="nav-links">
+    <a href="overview.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Overview</span></a>
+    <a href="students.html" class="nav-item active"><i class="fas fa-user-graduate"></i><span>Students</span></a>
+    <a href="faculty.html" class="nav-item"><i class="fas fa-chalkboard-teacher"></i><span>Faculty</span></a>
+    <a href="academics.html" class="nav-item"><i class="fas fa-book"></i><span>Academics</span></a>
+    <a href="labs.html" class="nav-item"><i class="fas fa-flask"></i><span>Labs & Projects</span></a>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <div class="header">
+    <h2>DEPARTMENT ERP SYSTEM</h2>
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Search student by name, ID or email">
+    </div>
+  </div>
+
+  <div class="stats-container">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-users"></i></div><div class="stat-info"><h3>1,247</h3><p>Total Students</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-laptop-code"></i></div><div class="stat-info"><h3>724</h3><p>CSE Students</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-robot"></i></div><div class="stat-info"><h3>523</h3><p>AI/ML Students</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-chart-line"></i></div><div class="stat-info"><h3>8.4</h3><p>Average CGPA</p></div></div>
+  </div>
+
+  <div class="table-container">
+    <div class="table-header">
+      <div>
+        <h3>Student Records</h3>
+        <p>Comprehensive list of all enrolled students</p>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Student ID</th><th>Name</th><th>Department</th><th>Year</th><th>CGPA</th><th>Projects</th><th>Status</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Modal -->
+<div id="studentModal">
+  <div class="modal-content">
+    <span id="closeModal">&times;</span>
+    <h2 id="modalName"></h2>
+    <p><strong>ID:</strong> <span id="modalID"></span></p>
+    <p><strong>Department:</strong> <span id="modalDept"></span></p>
+    <p><strong>Year:</strong> <span id="modalYear"></span></p>
+    <p><strong>CGPA:</strong> <span id="modalCGPA"></span></p>
+    <p><strong>Projects:</strong> <span id="modalProjects"></span></p>
+    <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+    <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+    <p><strong>Phone:</strong> <span id="modalPhone"></span></p>
+    <p><strong>Date of Birth:</strong> <span id="modalDOB"></span></p>
+  </div>
+</div>
+
+<script>
+async function loadStudents(query='') {
+  const res = await fetch(`http://localhost:3000/students?q=${query}`);
+  const students = await res.json();
+  const tableBody = document.querySelector('tbody');
+
+  tableBody.innerHTML = students.map(s => `
+    <tr>
+      <td><a href="#">${s.id}</a></td>
+      <td>${s.name}</td>
+      <td>${s.department}</td>
+      <td>${s.year}</td>
+      <td>${s.cgpa}</td>
+      <td>${s.projects}</td>
+      <td><span class="status ${s.status.toLowerCase()}">${s.status}</span></td>
+      <td><button class="btn btn-view" data-id="${s.id}">View</button></td>
+    </tr>
+  `).join('');
+
+  document.querySelectorAll('.btn-view').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const student = students.find(stu => stu.id === btn.dataset.id);
+      showStudentModal(student);
+    });
+  });
+}
+
+function showStudentModal(student) {
+  document.getElementById('modalName').innerText = student.name;
+  document.getElementById('modalID').innerText = student.id;
+  document.getElementById('modalDept').innerText = student.department;
+  document.getElementById('modalYear').innerText = student.year;
+  document.getElementById('modalCGPA').innerText = student.cgpa;
+  document.getElementById('modalProjects').innerText = student.projects;
+  document.getElementById('modalStatus').innerText = student.status;
+  document.getElementById('modalEmail').innerText = student.email;
+  document.getElementById('modalPhone').innerText = student.phone;
+  document.getElementById('modalDOB').innerText = student.dob;
+  document.getElementById('studentModal').style.display = 'flex';
+}
+
+document.getElementById('closeModal').addEventListener('click', () => {
+  document.getElementById('studentModal').style.display = 'none';
+});
+
+document.querySelector('.search-box input').addEventListener('input', (e) => loadStudents(e.target.value));
+
+// Initial load
+loadStudents();
+</script>
+
+</body>
+</html>

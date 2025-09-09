@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ERP System - Overview</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  /* === Copied/kept same base styling as your main page for a perfect match === */
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  body { display:flex; min-height:100vh; background-color:#f5f7fa; color:#333; }
+
+  /* Sidebar */
+  .sidebar{
+    width:250px; height:100vh; display:flex; flex-direction:column;
+    background:linear-gradient(135deg,#2c3e50,#1a2530); position:sticky; top:0;
+  }
+  .logo{ padding:25px 20px; background:#000; text-align:center; color:#fff; flex:0 0 auto; }
+  .logo h1{ font-size:22px; margin-bottom:5px; font-weight:600; }
+  .logo p{ font-size:14px; color:#ccc; }
+  .nav-links{ flex:1 1 auto; display:flex; flex-direction:column; justify-content:space-evenly; padding:18px 12px; background-color:#fff; }
+  .nav-item{ padding:15px 18px; display:flex; align-items:center; color:#111; text-decoration:none; transition:all .25s ease; border-left:4px solid transparent; border-radius:10px; }
+  .nav-item:hover, .nav-item.active{ background:rgba(0,0,0,0.03); border-left-color:#3498db; }
+  .nav-item i{ margin-right:12px; font-size:18px; width:24px; text-align:center; }
+
+  /* Main content */
+  .main-content{ flex:1; padding:25px; overflow-y:auto; }
+  .header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; padding-bottom:20px; border-bottom:1px solid #e0e6ed; }
+  .header h2{ font-size:28px; color:#2c3e50; font-weight:600; }
+  .search-box{ display:flex; align-items:center; background:#fff; border-radius:30px; padding:8px 20px; box-shadow:0 2px 10px rgba(0,0,0,0.08); width:320px; }
+  .search-box input{ border:none; outline:none; padding:8px 12px; width:100%; font-size:15px; background:transparent; }
+
+  /* Stats cards */
+  .stats-container{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:25px; margin-bottom:35px; }
+  .stat-card{ background:#fff; border-radius:12px; padding:25px; box-shadow:0 5px 15px rgba(0,0,0,0.08); display:flex; align-items:center; }
+  .stat-icon{ width:65px; height:65px; border-radius:15px; display:flex; align-items:center; justify-content:center; margin-right:20px; font-size:26px; }
+  .stat-icon.blue{ background:#e3f2fd; color:#1976d2; }
+  .stat-icon.green{ background:#e8f5e9; color:#388e3c; }
+  .stat-icon.purple{ background:#f3e5f5; color:#7b1fa2; }
+  .stat-icon.orange{ background:#fff3e0; color:#f57c00; }
+  .stat-info h3{ font-size:28px; margin-bottom:8px; color:#2c3e50; }
+  .stat-info p{ color:#666; font-size:15px; }
+
+  /* Panels */
+  .panels { display:grid; grid-template-columns: 2fr 1fr; gap:25px; margin-bottom:30px; }
+  .panel { background:#fff; border-radius:12px; padding:20px; box-shadow:0 5px 15px rgba(0,0,0,0.08); }
+  .panel h3{ margin-bottom:12px; color:#2c3e50; }
+
+  /* Overview cards */
+  .overview-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
+  .overview-card { border-radius:10px; padding:14px; background:#f8f9fa; display:flex; flex-direction:column; gap:8px; }
+  .overview-card h4{ margin:0; font-size:16px; color:#1a2530; }
+  .overview-card p{ margin:0; color:#555; font-size:13px; }
+  .overview-card .meta{ display:flex; justify-content:space-between; align-items:center; margin-top:8px; }
+  .chip{ padding:6px 10px; border-radius:999px; font-size:13px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.03); }
+
+  /* Table */
+  .table-container{ background:#fff; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.08); overflow:hidden; margin-top:0; }
+  .table-header{ padding:18px 25px; border-bottom:1px solid #e0e6ed; display:flex; justify-content:space-between; align-items:center; }
+  .table-header h3{ font-size:18px; color:#2c3e50; }
+  .table-header p{ color:#666; font-size:14px; margin:4px 0 0; }
+  table{ width:100%; border-collapse:collapse; }
+  th, td{ padding:12px 18px; text-align:left; border-bottom:1px solid #e0e6ed; font-size:14px; }
+  th{ background:#f8f9fa; font-weight:600; color:#2c3e50; }
+  tr:hover{ background:#f8f9fa; }
+  .btn{ padding:8px 14px; border:none; border-radius:6px; cursor:pointer; font-weight:500; transition:all .3s ease; }
+  .btn-view{ background:#e3f2fd; color:#1976d2; }
+  .btn-edit{ background:#fff3e0; color:#f57c00; margin-left:8px; }
+
+  /* Modal */
+  #detailModal{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000; }
+  .modal-content{ background:#fff; padding:22px 26px; border-radius:10px; width:520px; max-width:95%; position:relative; }
+  #closeModal{ position:absolute; top:10px; right:15px; font-size:22px; cursor:pointer; color:#333; }
+  .modal-content p{ margin:8px 0; font-size:14px; color:#333; }
+  .modal-content h2{ margin-bottom:8px; }
+
+  /* Responsive tweaks */
+  @media (max-width:768px){ .header{ flex-direction:column; align-items:flex-start; } .search-box{ width:100%; margin-top:16px; } .stats-container{ grid-template-columns:1fr; } .panels{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <h1>ERP System</h1>
+    <p>CSE & AIML</p>
+  </div>
+  <nav class="nav-links">
+    <a href="#" class="nav-item active"><i class="fas fa-chart-pie"></i><span>Overview</span></a>
+    <a href="students.html" class="nav-item"><i class="fas fa-user-graduate"></i><span>Students</span></a>
+    <a href="faculty.html" class="nav-item"><i class="fas fa-chalkboard-teacher"></i><span>Faculty</span></a>
+    <a href="academics.html" class="nav-item"><i class="fas fa-book"></i><span>Academics</span></a>
+    <a href="labs.html" class="nav-item"><i class="fas fa-flask"></i><span>Labs & Projects</span></a>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <div class="header">
+    <h2>OVERVIEW</h2>
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input id="globalSearch" type="text" placeholder="Search system data...">
+    </div>
+  </div>
+
+  <div class="stats-container">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-users"></i></div><div class="stat-info"><h3 id="totalUsers">1,247</h3><p>Total Users</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-graduation-cap"></i></div><div class="stat-info"><h3 id="totalStudents">1,180</h3><p>Students</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-chalkboard-teacher"></i></div><div class="stat-info"><h3 id="totalFaculty">67</h3><p>Faculty</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-book"></i></div><div class="stat-info"><h3 id="totalCourses">45</h3><p>Courses</p></div></div>
+  </div>
+
+  <div class="panels">
+    <!-- Left: System Overview -->
+    <div class="panel">
+      <h3>System Overview</h3>
+      <div class="overview-grid" id="overviewGrid">
+        <!-- Overview cards will be injected here -->
+      </div>
+    </div>
+
+    <!-- Right: Quick actions / Recent Activity -->
+    <div class="panel">
+      <h3>Quick Actions</h3>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px;">
+        <button class="btn btn-view" id="addUserBtn">+ Add User</button>
+        <button class="btn" id="generateReportBtn">Generate Report</button>
+        <button class="btn" id="systemSettingsBtn">System Settings</button>
+        <div style="margin-top:16px;">
+          <h4 style="margin:0 0 8px 0;color:#2c3e50">Recent Activity</h4>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="chip">New student registered</div>
+            <div class="chip">Course updated</div>
+            <div class="chip">Faculty meeting scheduled</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div class="table-header">
+      <div>
+        <h3>System Statistics</h3>
+        <p>Key metrics and performance indicators</p>
+      </div>
+      <div>
+        <select id="filterPeriod" style="padding:8px;border-radius:8px;border:1px solid #e0e6ed;">
+          <option value="today">Today</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+          <option value="year">This Year</option>
+        </select>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th><th>Value</th><th>Change</th><th>Status</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="statsTableBody">
+        <!-- rows injected here -->
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Modal for detailed statistics -->
+<div id="detailModal">
+  <div class="modal-content">
+    <span id="closeModal">&times;</span>
+    <h2 id="mdlMetricName">Metric Name</h2>
+    <p><strong>Current Value:</strong> <span id="mdlValue"></span></p>
+    <p><strong>Previous Value:</strong> <span id="mdlPrevious"></span></p>
+    <p><strong>Change:</strong> <span id="mdlChange"></span></p>
+    <p><strong>Status:</strong> <span id="mdlStatus"></span></p>
+    <p><strong>Description:</strong></p>
+    <p id="mdlDescription" style="color:#555;font-size:14px"></p>
+    <div style="margin-top:12px;">
+      <button class="btn btn-view" id="mdlViewDetailsBtn">View Details</button>
+      <button class="btn btn-edit" id="mdlExportBtn">Export Data</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Sample data – replace fetch URLs with your backend endpoints */
+const sampleOverview = [
+  { id:'USR001', name:'Active Users', value:'1,247', change:'+5.2%', status:'Good', description:'Total number of active users in the system' },
+  { id:'STD001', name:'Student Enrollment', value:'1,180', change:'+3.1%', status:'Good', description:'Current student enrollment across all programs' },
+  { id:'FAC001', name:'Faculty Count', value:'67', change:'+1.5%', status:'Good', description:'Total faculty members across all departments' },
+  { id:'CRS001', name:'Course Offerings', value:'45', change:'+2.3%', status:'Good', description:'Number of courses offered this semester' },
+  { id:'ATT001', name:'Attendance Rate', value:'94.2%', change:'+0.8%', status:'Excellent', description:'Average attendance rate across all classes' },
+  { id:'GRD001', name:'Average Grade', value:'B+', change:'+0.2', status:'Good', description:'Average grade point across all courses' }
+];
+
+const sampleCards = [
+  { title:'System Health', value:'98.5%', icon:'fas fa-heartbeat', color:'green' },
+  { title:'Database Size', value:'2.3 GB', icon:'fas fa-database', color:'blue' },
+  { title:'Active Sessions', value:'156', icon:'fas fa-users', color:'purple' },
+  { title:'Server Uptime', value:'99.9%', icon:'fas fa-server', color:'orange' }
+];
+
+function renderOverviewCard(card){
+  return `
+    <div class="overview-card" data-title="${card.title}">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h4>${card.title}</h4>
+        <i class="${card.icon}" style="color:${card.color};font-size:20px;"></i>
+      </div>
+      <p style="color:#666;font-size:24px;font-weight:bold;">${card.value}</p>
+    </div>
+  `;
+}
+
+function renderTableRow(metric){
+  const statusColor = metric.status === 'Excellent' ? 'green' : metric.status === 'Good' ? 'blue' : 'orange';
+  return `
+    <tr data-id="${metric.id}">
+      <td><a href="#">${metric.name}</a></td>
+      <td>${metric.value}</td>
+      <td><span style="color:${metric.change.startsWith('+') ? 'green' : 'red'};font-weight:600">${metric.change}</span></td>
+      <td><span style="color:${statusColor};font-weight:600">${metric.status}</span></td>
+      <td>
+        <button class="btn btn-view" data-action="view" data-id="${metric.id}">View</button>
+        <button class="btn btn-edit" data-action="export" data-id="${metric.id}">Export</button>
+      </td>
+    </tr>
+  `;
+}
+
+function loadOverview(query='', periodFilter='today') {
+  // Replace this logic with a real fetch to your backend, e.g.:
+  // fetch(`/overview?q=${encodeURIComponent(query)}&period=${periodFilter}`).then(...)
+  // For now use sample data and basic filtering
+  let data = sampleOverview.slice();
+  if (query) {
+    const q = query.toLowerCase();
+    data = data.filter(d => 
+      d.name.toLowerCase().includes(q) || 
+      d.id.toLowerCase().includes(q) || 
+      d.status.toLowerCase().includes(q)
+    );
+  }
+
+  // Update stats
+  document.getElementById('totalUsers').innerText = '1,247';
+  document.getElementById('totalStudents').innerText = '1,180';
+  document.getElementById('totalFaculty').innerText = '67';
+  document.getElementById('totalCourses').innerText = '45';
+
+  document.getElementById('overviewGrid').innerHTML = sampleCards.map(renderOverviewCard).join('');
+  document.getElementById('statsTableBody').innerHTML = data.map(renderTableRow).join('');
+
+  // wire up buttons
+  document.querySelectorAll('[data-action="view"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      const metric = sampleOverview.find(m => m.id === id);
+      if (metric) showDetailModal(metric);
+    });
+  });
+  document.querySelectorAll('[data-action="export"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      alert('Export functionality – implement data export feature. Metric: ' + btn.dataset.id);
+    });
+  });
+}
+
+function showDetailModal(metric){
+  document.getElementById('mdlMetricName').innerText = metric.name;
+  document.getElementById('mdlValue').innerText = metric.value;
+  document.getElementById('mdlPrevious').innerText = 'Previous value (calculated)';
+  document.getElementById('mdlChange').innerText = metric.change;
+  document.getElementById('mdlStatus').innerText = metric.status;
+  document.getElementById('mdlDescription').innerText = metric.description;
+  document.getElementById('detailModal').style.display = 'flex';
+}
+
+document.getElementById('closeModal').addEventListener('click', () => {
+  document.getElementById('detailModal').style.display = 'none';
+});
+
+document.getElementById('globalSearch').addEventListener('input', (e) => {
+  loadOverview(e.target.value, document.getElementById('filterPeriod').value);
+});
+document.getElementById('filterPeriod').addEventListener('change', (e) => {
+  loadOverview(document.getElementById('globalSearch').value, e.target.value);
+});
+document.getElementById('addUserBtn').addEventListener('click', () => alert('Open add-user modal / page (implement user management)'));
+document.getElementById('generateReportBtn').addEventListener('click', () => alert('Open report generator (implement reporting system)'));
+document.getElementById('systemSettingsBtn').addEventListener('click', () => alert('Open system settings (implement admin panel)'));
+
+// Modal action buttons
+document.getElementById('mdlViewDetailsBtn').addEventListener('click', () => alert('View detailed metrics (implement detailed analytics)'));
+document.getElementById('mdlExportBtn').addEventListener('click', () => alert('Export data functionality (implement data export)'));
+
+// initial render
+loadOverview();
+</script>
+
+</body>
+</html>

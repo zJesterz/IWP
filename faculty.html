@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ERP System - Faculty</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  /* === Copied/kept same base styling as your main page for a perfect match === */
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  body { display:flex; min-height:100vh; background-color:#f5f7fa; color:#333; }
+
+  /* Sidebar */
+  .sidebar{
+    width:250px; height:100vh; display:flex; flex-direction:column;
+    background:linear-gradient(135deg,#2c3e50,#1a2530); position:sticky; top:0;
+  }
+  .logo{ padding:25px 20px; background:#000; text-align:center; color:#fff; flex:0 0 auto; }
+  .logo h1{ font-size:22px; margin-bottom:5px; font-weight:600; }
+  .logo p{ font-size:14px; color:#ccc; }
+  .nav-links{ flex:1 1 auto; display:flex; flex-direction:column; justify-content:space-evenly; padding:18px 12px; background-color:#fff; }
+  .nav-item{ padding:15px 18px; display:flex; align-items:center; color:#111; text-decoration:none; transition:all .25s ease; border-left:4px solid transparent; border-radius:10px; }
+  .nav-item:hover, .nav-item.active{ background:rgba(0,0,0,0.03); border-left-color:#3498db; }
+  .nav-item i{ margin-right:12px; font-size:18px; width:24px; text-align:center; }
+
+  /* Main content */
+  .main-content{ flex:1; padding:25px; overflow-y:auto; }
+  .header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; padding-bottom:20px; border-bottom:1px solid #e0e6ed; }
+  .header h2{ font-size:28px; color:#2c3e50; font-weight:600; }
+  .search-box{ display:flex; align-items:center; background:#fff; border-radius:30px; padding:8px 20px; box-shadow:0 2px 10px rgba(0,0,0,0.08); width:320px; }
+  .search-box input{ border:none; outline:none; padding:8px 12px; width:100%; font-size:15px; background:transparent; }
+
+  /* Stats cards */
+  .stats-container{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:25px; margin-bottom:35px; }
+  .stat-card{ background:#fff; border-radius:12px; padding:25px; box-shadow:0 5px 15px rgba(0,0,0,0.08); display:flex; align-items:center; }
+  .stat-icon{ width:65px; height:65px; border-radius:15px; display:flex; align-items:center; justify-content:center; margin-right:20px; font-size:26px; }
+  .stat-icon.blue{ background:#e3f2fd; color:#1976d2; }
+  .stat-icon.green{ background:#e8f5e9; color:#388e3c; }
+  .stat-icon.purple{ background:#f3e5f5; color:#7b1fa2; }
+  .stat-icon.orange{ background:#fff3e0; color:#f57c00; }
+  .stat-info h3{ font-size:28px; margin-bottom:8px; color:#2c3e50; }
+  .stat-info p{ color:#666; font-size:15px; }
+
+  /* Panels */
+  .panels { display:grid; grid-template-columns: 2fr 1fr; gap:25px; margin-bottom:30px; }
+  .panel { background:#fff; border-radius:12px; padding:20px; box-shadow:0 5px 15px rgba(0,0,0,0.08); }
+  .panel h3{ margin-bottom:12px; color:#2c3e50; }
+
+  /* Faculty cards */
+  .faculty-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
+  .faculty { border-radius:10px; padding:14px; background:#f8f9fa; display:flex; flex-direction:column; gap:8px; }
+  .faculty h4{ margin:0; font-size:16px; color:#1a2530; }
+  .faculty p{ margin:0; color:#555; font-size:13px; }
+  .faculty .meta{ display:flex; justify-content:space-between; align-items:center; margin-top:8px; }
+  .chip{ padding:6px 10px; border-radius:999px; font-size:13px; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.03); }
+
+  /* Table */
+  .table-container{ background:#fff; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.08); overflow:hidden; margin-top:0; }
+  .table-header{ padding:18px 25px; border-bottom:1px solid #e0e6ed; display:flex; justify-content:space-between; align-items:center; }
+  .table-header h3{ font-size:18px; color:#2c3e50; }
+  .table-header p{ color:#666; font-size:14px; margin:4px 0 0; }
+  table{ width:100%; border-collapse:collapse; }
+  th, td{ padding:12px 18px; text-align:left; border-bottom:1px solid #e0e6ed; font-size:14px; }
+  th{ background:#f8f9fa; font-weight:600; color:#2c3e50; }
+  tr:hover{ background:#f8f9fa; }
+  .btn{ padding:8px 14px; border:none; border-radius:6px; cursor:pointer; font-weight:500; transition:all .3s ease; }
+  .btn-view{ background:#e3f2fd; color:#1976d2; }
+  .btn-edit{ background:#fff3e0; color:#f57c00; margin-left:8px; }
+
+  /* Modal */
+  #detailModal{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000; }
+  .modal-content{ background:#fff; padding:22px 26px; border-radius:10px; width:520px; max-width:95%; position:relative; }
+  #closeModal{ position:absolute; top:10px; right:15px; font-size:22px; cursor:pointer; color:#333; }
+  .modal-content p{ margin:8px 0; font-size:14px; color:#333; }
+  .modal-content h2{ margin-bottom:8px; }
+
+  /* Responsive tweaks */
+  @media (max-width:768px){ .header{ flex-direction:column; align-items:flex-start; } .search-box{ width:100%; margin-top:16px; } .stats-container{ grid-template-columns:1fr; } .panels{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <h1>ERP System</h1>
+    <p>CSE & AIML</p>
+  </div>
+  <nav class="nav-links">
+    <a href="overview.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Overview</span></a>
+    <a href="students.html" class="nav-item"><i class="fas fa-user-graduate"></i><span>Students</span></a>
+    <a href="#" class="nav-item active"><i class="fas fa-chalkboard-teacher"></i><span>Faculty</span></a>
+    <a href="academics.html" class="nav-item"><i class="fas fa-book"></i><span>Academics</span></a>
+    <a href="labs.html" class="nav-item"><i class="fas fa-flask"></i><span>Labs & Projects</span></a>
+  </nav>
+</aside>
+
+<main class="main-content">
+  <div class="header">
+    <h2>FACULTY</h2>
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input id="globalSearch" type="text" placeholder="Search faculty, department, or specialization">
+    </div>
+  </div>
+
+  <div class="stats-container">
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-chalkboard-teacher"></i></div><div class="stat-info"><h3 id="totalFaculty">28</h3><p>Total Faculty</p></div></div>
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-user-check"></i></div><div class="stat-info"><h3 id="activeFaculty">26</h3><p>Active Faculty</p></div></div>
+    <div class="stat-card"><div class="stat-icon purple"><i class="fas fa-graduation-cap"></i></div><div class="stat-info"><h3 id="professors">8</h3><p>Professors</p></div></div>
+    <div class="stat-card"><div class="stat-icon orange"><i class="fas fa-award"></i></div><div class="stat-info"><h3 id="avgExperience">12</h3><p>Avg. Experience (Years)</p></div></div>
+  </div>
+
+  <div class="panels">
+    <!-- Left: Faculty and Details -->
+    <div class="panel">
+      <h3>Faculty Members</h3>
+      <div class="faculty-grid" id="facultyGrid">
+        <!-- Faculty cards will be injected here -->
+      </div>
+    </div>
+
+    <!-- Right: Quick actions / Upcoming -->
+    <div class="panel">
+      <h3>Quick Actions</h3>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px;">
+        <button class="btn btn-view" id="addFacultyBtn">+ Add Faculty</button>
+        <button class="btn" id="scheduleBtn">Schedule Meeting</button>
+        <div style="margin-top:16px;">
+          <h4 style="margin:0 0 8px 0;color:#2c3e50">Department Heads</h4>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="chip">CSE – Dr. Rajesh Kumar</div>
+            <div class="chip">AI/ML – Dr. Priya Sharma</div>
+            <div class="chip">Admin – Dr. Anil Gupta</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div class="table-header">
+      <div>
+        <h3>Faculty Directory</h3>
+        <p>Complete list of faculty members and their details</p>
+      </div>
+      <div>
+        <select id="filterDept" style="padding:8px;border-radius:8px;border:1px solid #e0e6ed;">
+          <option value="">All Departments</option>
+          <option value="CSE">CSE</option>
+          <option value="AI/ML">AI/ML</option>
+          <option value="Admin">Admin</option>
+        </select>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Name</th><th>Dept</th><th>Designation</th><th>Experience</th><th>Status</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="facultyTableBody">
+        <!-- rows injected here -->
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Modal for faculty details -->
+<div id="detailModal">
+  <div class="modal-content">
+    <span id="closeModal">&times;</span>
+    <h2 id="mdlFacultyName">Faculty Name</h2>
+    <p><strong>ID:</strong> <span id="mdlId"></span></p>
+    <p><strong>Department:</strong> <span id="mdlDept"></span></p>
+    <p><strong>Designation:</strong> <span id="mdlDesignation"></span></p>
+    <p><strong>Experience:</strong> <span id="mdlExperience"></span></p>
+    <p><strong>Email:</strong> <span id="mdlEmail"></span></p>
+    <p><strong>Phone:</strong> <span id="mdlPhone"></span></p>
+    <p><strong>Specialization:</strong></p>
+    <p id="mdlSpecialization" style="color:#555;font-size:14px"></p>
+    <div style="margin-top:12px;">
+      <button class="btn btn-view" id="mdlScheduleBtn">Schedule Meeting</button>
+      <button class="btn btn-edit" id="mdlEditBtn">Edit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Sample data – replace fetch URLs with your backend endpoints */
+const sampleFaculty = [
+  { id:'FAC001', name:'Dr. Priya Rao', dept:'CSE', designation:'Professor', experience:15, status:'Active', email:'priya.rao@college.edu', phone:'+91-9876543210', specialization:'Data Structures, Algorithms, Computer Networks' },
+  { id:'FAC002', name:'Dr. Amar Singh', dept:'CSE', designation:'Associate Professor', experience:12, status:'Active', email:'amar.singh@college.edu', phone:'+91-9876543211', specialization:'Operating Systems, System Programming, Distributed Systems' },
+  { id:'FAC003', name:'Dr. S. Mehta', dept:'AI/ML', designation:'Professor', experience:18, status:'Active', email:'s.mehta@college.edu', phone:'+91-9876543212', specialization:'Machine Learning, Data Mining, Pattern Recognition' },
+  { id:'FAC004', name:'Dr. N. Verma', dept:'AI/ML', designation:'Assistant Professor', experience:8, status:'Active', email:'n.verma@college.edu', phone:'+91-9876543213', specialization:'Deep Learning, Neural Networks, Computer Vision' },
+  { id:'FAC005', name:'Dr. Rajesh Kumar', dept:'CSE', designation:'Professor & HOD', experience:20, status:'Active', email:'rajesh.kumar@college.edu', phone:'+91-9876543214', specialization:'Software Engineering, Database Systems, Web Technologies' },
+  { id:'FAC006', name:'Dr. Priya Sharma', dept:'AI/ML', designation:'Professor & HOD', experience:16, status:'Active', email:'priya.sharma@college.edu', phone:'+91-9876543215', specialization:'Artificial Intelligence, Natural Language Processing, Robotics' }
+];
+
+function renderFacultyCard(f){
+  return `
+    <div class="faculty" data-id="${f.id}">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h4>${f.name}</h4>
+        <div class="chip">${f.experience}y</div>
+      </div>
+      <p style="color:#666">${f.id} – ${f.dept}</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+        <small style="color:#666">${f.designation}</small>
+        <div>
+          <button class="btn btn-view" data-action="view" data-id="${f.id}">View</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderTableRow(f){
+  const statusColor = f.status === 'Active' ? 'green' : 'red';
+  return `
+    <tr data-id="${f.id}">
+      <td><a href="#">${f.id}</a></td>
+      <td>${f.name}</td>
+      <td>${f.dept}</td>
+      <td>${f.designation}</td>
+      <td>${f.experience} years</td>
+      <td><span style="color:${statusColor};font-weight:600">${f.status}</span></td>
+      <td>
+        <button class="btn btn-view" data-action="view" data-id="${f.id}">View</button>
+        <button class="btn btn-edit" data-action="edit" data-id="${f.id}">Edit</button>
+      </td>
+    </tr>
+  `;
+}
+
+function loadFaculty(query='', deptFilter='') {
+  // Replace this logic with a real fetch to your backend, e.g.:
+  // fetch(`/faculty?q=${encodeURIComponent(query)}&dept=${deptFilter}`).then(...)
+  // For now use sampleFaculty and basic filtering
+  let data = sampleFaculty.slice();
+  if (deptFilter) data = data.filter(d => d.dept === deptFilter);
+  if (query) {
+    const q = query.toLowerCase();
+    data = data.filter(d => 
+      d.name.toLowerCase().includes(q) || 
+      d.id.toLowerCase().includes(q) || 
+      d.designation.toLowerCase().includes(q) ||
+      d.specialization.toLowerCase().includes(q)
+    );
+  }
+
+  // Update stats
+  document.getElementById('totalFaculty').innerText = data.length;
+  document.getElementById('activeFaculty').innerText = data.filter(f => f.status === 'Active').length;
+  document.getElementById('professors').innerText = data.filter(f => f.designation.includes('Professor')).length;
+  
+  const avgExp = data.length ? Math.round(data.reduce((sum, f) => sum + f.experience, 0) / data.length) : 0;
+  document.getElementById('avgExperience').innerText = avgExp;
+
+  document.getElementById('facultyGrid').innerHTML = data.map(renderFacultyCard).join('');
+  document.getElementById('facultyTableBody').innerHTML = data.map(renderTableRow).join('');
+
+  // wire up buttons
+  document.querySelectorAll('[data-action="view"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      const faculty = sampleFaculty.find(f => f.id === id);
+      if (faculty) showDetailModal(faculty);
+    });
+  });
+  document.querySelectorAll('[data-action="edit"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      alert('Edit handler – hook this to your edit form / page. Faculty: ' + btn.dataset.id);
+    });
+  });
+}
+
+function showDetailModal(faculty){
+  document.getElementById('mdlFacultyName').innerText = faculty.name;
+  document.getElementById('mdlId').innerText = faculty.id;
+  document.getElementById('mdlDept').innerText = faculty.dept;
+  document.getElementById('mdlDesignation').innerText = faculty.designation;
+  document.getElementById('mdlExperience').innerText = faculty.experience + ' years';
+  document.getElementById('mdlEmail').innerText = faculty.email;
+  document.getElementById('mdlPhone').innerText = faculty.phone;
+  document.getElementById('mdlSpecialization').innerText = faculty.specialization;
+  document.getElementById('detailModal').style.display = 'flex';
+}
+
+document.getElementById('closeModal').addEventListener('click', () => {
+  document.getElementById('detailModal').style.display = 'none';
+});
+
+document.getElementById('globalSearch').addEventListener('input', (e) => {
+  loadFaculty(e.target.value, document.getElementById('filterDept').value);
+});
+document.getElementById('filterDept').addEventListener('change', (e) => {
+  loadFaculty(document.getElementById('globalSearch').value, e.target.value);
+});
+document.getElementById('addFacultyBtn').addEventListener('click', () => alert('Open add-faculty modal / page (implement on backend)'));
+document.getElementById('scheduleBtn').addEventListener('click', () => alert('Open meeting scheduler (implement calendar integration)'));
+
+// Modal action buttons
+document.getElementById('mdlScheduleBtn').addEventListener('click', () => alert('Schedule meeting functionality (implement calendar/booking system)'));
+document.getElementById('mdlEditBtn').addEventListener('click', () => {
+  document.getElementById('detailModal').style.display = 'none';
+  alert('Open edit faculty form (implement on backend)');
+});
+
+// initial render
+loadFaculty();
+</script>
+
+</body>
+</html>
