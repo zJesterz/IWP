@@ -76,6 +76,13 @@
 
   /* Responsive tweaks */
   @media (max-width:768px){ .header{ flex-direction:column; align-items:flex-start; } .search-box{ width:100%; margin-top:16px; } .stats-container{ grid-template-columns:1fr; } .panels{ grid-template-columns:1fr; } }
+
+  /* Palette */
+  :root{ --color-1:#635985; --color-2:#443c68; --color-3:#393053; --color-4:#18122b; }
+  body{ background-color:#f6f7fb; background-image:radial-gradient(1200px 600px at 10% -10%, rgba(99,89,133,0.08), transparent 60%), radial-gradient(1000px 600px at 110% 20%, rgba(68,60,104,0.08), transparent 60%); }
+  .sidebar{ background:linear-gradient(135deg,var(--color-3),var(--color-4)); }
+  .header h2{ color:var(--color-2); }
+  .nav-item:hover, .nav-item.active{ border-left-color:var(--color-1); }
 </style>
 </head>
 <body>
@@ -309,6 +316,5 @@ document.getElementById('mdlEditBtn').addEventListener('click', () => {
 // initial render
 loadFaculty();
 </script>
-
 </body>
 </html>

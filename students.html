@@ -9,6 +9,13 @@
   * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
   body { display:flex; min-height:100vh; background-color:#f5f7fa; color:#333; }
 
+  /* Palette */
+  :root{ --color-1:#635985; --color-2:#443c68; --color-3:#393053; --color-4:#18122b; }
+  body{ background-color:#f6f7fb; background-image:radial-gradient(1200px 600px at 10% -10%, rgba(99,89,133,0.08), transparent 60%), radial-gradient(1000px 600px at 110% 20%, rgba(68,60,104,0.08), transparent 60%); }
+  .sidebar{ background:linear-gradient(135deg,var(--color-3),var(--color-4)); }
+  .header h2{ color:var(--color-2); }
+  .nav-item:hover, .nav-item.active{ border-left-color:var(--color-1); }
+
   /* Sidebar */
   .sidebar{
     width:250px; height:100vh; display:flex; flex-direction:column;
@@ -184,6 +191,5 @@ document.querySelector('.search-box input').addEventListener('input', (e) => loa
 // Initial load
 loadStudents();
 </script>
-
 </body>
 </html>

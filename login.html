@@ -40,7 +40,7 @@
 
     .login-container h2 {
       margin-bottom: 20px;
-      color: #2c3e50;
+      color: var(--color-2);
     }
 
     .input-group {
@@ -199,7 +199,7 @@
 
       if(username === "admin" && password === "1234" && captchaInput === captchaText){
         alert("Login Successful!");
-        window.location.href = "dashboard.html"; 
+        window.location.href = "overview.html"; 
       } else {
         error.style.display = "block";
         generateCaptcha(); 
