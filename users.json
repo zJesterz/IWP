@@ -1,0 +1,58 @@
+[
+  {
+    "id": "1757436358448",
+    "fullname": "Test User",
+    "email": "test@example.com",
+    "username": "testuser",
+    "password": "password123",
+    "createdAt": "2025-09-09T16:45:58.448Z"
+  },
+  {
+    "id": "1757436384690",
+    "fullname": "Another User",
+    "email": "another@example.com",
+    "username": "anotheruser",
+    "password": "password123",
+    "createdAt": "2025-09-09T16:46:24.690Z"
+  },
+  {
+    "id": "1757436508727",
+    "fullname": "Debug User",
+    "email": "debug@test.com",
+    "username": "debuguser123",
+    "password": "password123",
+    "createdAt": "2025-09-09T16:48:28.727Z"
+  },
+  {
+    "id": "1757436566530",
+    "fullname": "Danny",
+    "email": "danny2004@gmail.com",
+    "username": "boyka",
+    "password": "123456",
+    "createdAt": "2025-09-09T16:49:26.530Z"
+  },
+  {
+    "id": "1757436634642",
+    "fullname": "Test User",
+    "email": "test@test.com",
+    "username": "testuser1757436634631",
+    "password": "password123",
+    "createdAt": "2025-09-09T16:50:34.642Z"
+  },
+  {
+    "id": "1757436812934",
+    "fullname": "yadhu",
+    "email": "yadhu@gmail.com",
+    "username": "yadh",
+    "password": "123456",
+    "createdAt": "2025-09-09T16:53:32.934Z"
+  },
+  {
+    "id": "1757436933461",
+    "fullname": "ashrith",
+    "email": "ash@gmail.com",
+    "username": "ash",
+    "password": "123456",
+    "createdAt": "2025-09-09T16:55:33.461Z"
+  }
+]

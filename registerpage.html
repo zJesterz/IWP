@@ -149,6 +149,7 @@
       </div>
 
       <button type="submit" class="btn">Register</button>
+      <button type="button" class="btn" onclick="testConnection()" style="background: #27ae60; margin-top: 10px;">Test Connection</button>
       <div class="extra-links">
         <p>Already have an account? <a href="login.html">Login</a></p>
       </div>
@@ -156,7 +157,35 @@
   </div>
 
   <script>
-    document.getElementById("registerForm").addEventListener("submit", function(event){
+    console.log('Registration page loaded - Version 2.0');
+    
+    // Test connection function
+    async function testConnection() {
+      try {
+        console.log('Testing connection...');
+        const response = await fetch('/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            fullname: "Test User",
+            email: "test@test.com",
+            username: "testuser" + Date.now(),
+            password: "password123"
+          })
+        });
+        
+        const result = await response.json();
+        console.log('Test result:', result);
+        alert('Connection test successful! Check console for details.');
+      } catch (error) {
+        console.error('Test failed:', error);
+        alert('Connection test failed: ' + error.message);
+      }
+    }
+    
+    document.getElementById("registerForm").addEventListener("submit", async function(event){
       event.preventDefault();
 
       const fullname = document.getElementById("fullname").value.trim();
@@ -170,6 +199,7 @@
       error.style.display = "none";
       success.style.display = "none";
 
+      // Client-side validation
       if (!fullname || !email || !username || !password || !confirmPassword) {
         error.innerText = "All fields are required!";
         error.style.display = "block";
@@ -182,10 +212,76 @@
         return;
       }
 
-      // Simulate successful account creation
-      success.innerText = "Account created successfully!";
-      success.style.display = "block";
-      document.getElementById("registerForm").reset();
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        error.innerText = "Please enter a valid email address!";
+        error.style.display = "block";
+        return;
+      }
+
+      // Password length validation
+      if (password.length < 6) {
+        error.innerText = "Password must be at least 6 characters long!";
+        error.style.display = "block";
+        return;
+      }
+
+      try {
+        // Show loading state
+        const submitBtn = document.querySelector('.btn');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Creating Account...';
+        submitBtn.disabled = true;
+
+        // Send registration data to server
+        console.log('Sending registration request...');
+        const response = await fetch('/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            fullname,
+            email,
+            username,
+            password
+          })
+        });
+
+        console.log('Response received:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('Registration result:', result);
+
+        if (result.success) {
+          success.innerText = result.message;
+          success.style.display = "block";
+          document.getElementById("registerForm").reset();
+          
+          // Redirect to login page after 2 seconds
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 2000);
+        } else {
+          error.innerText = result.message;
+          error.style.display = "block";
+        }
+
+      } catch (error) {
+        console.error('Registration error:', error);
+        error.innerText = "Network error. Please check your connection and try again.";
+        error.style.display = "block";
+      } finally {
+        // Reset button state
+        const submitBtn = document.querySelector('.btn');
+        submitBtn.textContent = 'Register';
+        submitBtn.disabled = false;
+      }
     });
   </script>
 </body>

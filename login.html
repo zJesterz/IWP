@@ -189,20 +189,79 @@
       document.getElementById("captcha").innerText = captchaText;
     }
 
-    document.getElementById("loginForm").addEventListener("submit", function(event){
+    document.getElementById("loginForm").addEventListener("submit", async function(event){
       event.preventDefault();
 
-      const username = document.getElementById("username").value;
+      const username = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value;
-      const captchaInput = document.getElementById("captchaInput").value;
+      const captchaInput = document.getElementById("captchaInput").value.trim();
       const error = document.getElementById("error");
 
-      if(username === "admin" && password === "1234" && captchaInput === captchaText){
-        alert("Login Successful!");
-        window.location.href = "overview.html"; 
-      } else {
+      // Hide error message
+      error.style.display = "none";
+
+      // Validate captcha first
+      if (captchaInput !== captchaText) {
+        error.innerText = "Invalid captcha!";
         error.style.display = "block";
-        generateCaptcha(); 
+        generateCaptcha();
+        return;
+      }
+
+      // Validate required fields
+      if (!username || !password) {
+        error.innerText = "Username and password are required!";
+        error.style.display = "block";
+        return;
+      }
+
+      try {
+        // Show loading state
+        const submitBtn = document.querySelector('.btn');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Logging in...';
+        submitBtn.disabled = true;
+
+        // Send login data to server
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username,
+            password,
+            captcha: captchaInput
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Store user data in sessionStorage for use in other pages
+          sessionStorage.setItem('user', JSON.stringify(result.user));
+          alert("Login Successful!");
+          window.location.href = "overview.html";
+        } else {
+          error.innerText = result.message;
+          error.style.display = "block";
+          generateCaptcha();
+        }
+
+      } catch (error) {
+        console.error('Login error:', error);
+        error.innerText = "Network error. Please check your connection and try again.";
+        error.style.display = "block";
+        generateCaptcha();
+      } finally {
+        // Reset button state
+        const submitBtn = document.querySelector('.btn');
+        submitBtn.textContent = 'Login';
+        submitBtn.disabled = false;
       }
     });
 

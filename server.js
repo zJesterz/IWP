@@ -1,12 +1,16 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const fs = require('fs');
 const students = require('./students.json'); // student data
 const app = express();
 const port = 3000;
 
 // Enable CORS for all routes
 app.use(cors());
+
+// Parse JSON bodies
+app.use(express.json());
 
 // Serve static files (all .html, css, js, etc.)
 app.use(express.static(path.join(__dirname)));
@@ -62,6 +66,139 @@ app.get('/students', (req, res) => {
     s.email.toLowerCase().includes(q)
   );
   res.json(result);
+});
+
+// --- User Authentication API ---
+// POST /login
+app.post('/login', (req, res) => {
+  try {
+    const { username, password, captcha } = req.body;
+
+    // Validate required fields
+    if (!username || !password || !captcha) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Username, password, and captcha are required!' 
+      });
+    }
+
+    // Read existing users
+    let users = [];
+    try {
+      const usersData = fs.readFileSync('users.json', 'utf8');
+      users = JSON.parse(usersData);
+    } catch (error) {
+      // File doesn't exist or is empty
+      return res.status(400).json({ 
+        success: false, 
+        message: 'No users found. Please register first.' 
+      });
+    }
+
+    // Find user by username
+    const user = users.find(u => u.username === username);
+
+    if (!user) {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Invalid username or password!' 
+      });
+    }
+
+    // Check password (in production, compare hashed passwords)
+    if (user.password !== password) {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Invalid username or password!' 
+      });
+    }
+
+    // Return success (don't include password in response)
+    const { password: _, ...userResponse } = user;
+    res.json({ 
+      success: true, 
+      message: 'Login successful!',
+      user: userResponse
+    });
+
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error occurred. Please try again.' 
+    });
+  }
+});
+
+// --- User Registration API ---
+// POST /register
+app.post('/register', (req, res) => {
+  try {
+    const { fullname, email, username, password } = req.body;
+
+    // Validate required fields
+    if (!fullname || !email || !username || !password) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'All fields are required!' 
+      });
+    }
+
+    // Read existing users
+    let users = [];
+    try {
+      const usersData = fs.readFileSync('users.json', 'utf8');
+      users = JSON.parse(usersData);
+    } catch (error) {
+      // File doesn't exist or is empty, start with empty array
+      users = [];
+    }
+
+    // Check for duplicate username or email
+    const existingUser = users.find(user => 
+      user.username === username || user.email === email
+    );
+
+    if (existingUser) {
+      return res.status(400).json({ 
+        success: false, 
+        message: existingUser.username === username 
+          ? 'Username already exists!' 
+          : 'Email already registered!' 
+      });
+    }
+
+    // Create new user
+    const newUser = {
+      id: Date.now().toString(), // Simple ID generation
+      fullname: fullname.trim(),
+      email: email.trim().toLowerCase(),
+      username: username.trim(),
+      password: password, // In production, hash this password!
+      createdAt: new Date().toISOString()
+    };
+
+    // Add user to array
+    users.push(newUser);
+
+    // Save to file
+    fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
+
+    // Return success (don't include password in response)
+    const { password: _, ...userResponse } = newUser;
+    res.status(201).json({ 
+      success: true, 
+      message: 'Account created successfully!',
+      user: userResponse
+    });
+
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error occurred. Please try again.' 
+    });
+  }
 });
 
 // Start the server
