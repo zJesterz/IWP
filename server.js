@@ -57,6 +57,11 @@ app.get('/faculty.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'faculty.html'));
 });
 
+// Route for the labs page
+app.get('/labs.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'labs.html'));
+});
+
 // --- API Endpoint for Student Data ---
 // GET /students?q=<search>
 app.get('/students', (req, res) => {

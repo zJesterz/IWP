@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ERP System - Labs & Projects</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+    body{display:flex;min-height:100vh;background-color:#f6f7fb;background-image:radial-gradient(1200px 600px at 10% -10%, rgba(99,89,133,0.08), transparent 60%), radial-gradient(1000px 600px at 110% 20%, rgba(68,60,104,0.08), transparent 60%)}
+    .sidebar{width:250px;height:100vh;display:flex;flex-direction:column;background:linear-gradient(135deg,#2c3e50,#1a2530);position:sticky;top:0}
+    .logo{padding:25px 20px;background:#000;text-align:center;color:#fff;flex:0 0 auto}
+    .logo h1{font-size:22px;margin-bottom:5px;font-weight:600}
+    .logo p{font-size:14px;color:#ccc}
+    .nav-links{flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-evenly;padding:18px 12px;background-color:#fff}
+    .nav-item{padding:15px 18px;display:flex;align-items:center;color:#111;text-decoration:none;transition:all .25s ease;border-left:4px solid transparent;border-radius:10px}
+    .nav-item:hover,.nav-item.active{background:rgba(0,0,0,0.03);border-left-color:#3498db}
+    .nav-item i{margin-right:12px;font-size:18px;width:24px;text-align:center}
+    .main-content{flex:1;padding:25px;overflow-y:auto}
+    .header{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin-bottom:30px;padding-bottom:20px;border-bottom:1px solid #e0e6ed}
+    .header h2{font-size:28px;color:#2c3e50;font-weight:600}
+    .logout-btn{justify-self:end;display:inline-flex;align-items:center;gap:8px;background:#fff;color:#2c3e50;border:1px solid #e0e6ed;border-radius:10px;padding:8px 12px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.06);transition:background .2s ease}
+    .logout-btn:hover{background:#f8f9fa}
+    .tabs{display:flex;gap:10px;margin-bottom:18px}
+    .tab-btn{border:1px solid #e0e6ed;background:#fff;border-radius:10px;padding:10px 14px;cursor:pointer}
+    .tab-btn.active{background:#e3f2fd;color:#1976d2;border-color:#bbdefb}
+    .lab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+    .lab-card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 5px 15px rgba(0,0,0,0.08)}
+    .lab-card h3{margin-bottom:6px;color:#2c3e50}
+    .lab-meta{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+    .chip{padding:6px 10px;border-radius:999px;font-size:12px;background:#f8f9fa}
+    .actions{margin-top:10px;display:flex;gap:8px}
+    .btn{padding:8px 12px;border:none;border-radius:8px;cursor:pointer}
+    .btn.primary{background:#e3f2fd;color:#1976d2}
+    .btn.secondary{background:#fff3e0;color:#f57c00}
+    @media (max-width:768px){.header{grid-template-columns:1fr;gap:10px}.logout-btn{justify-self:start}}
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo">
+      <h1>ERP System</h1>
+      <p>CSE & AIML</p>
+    </div>
+    <nav class="nav-links">
+      <a href="overview.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Overview</span></a>
+      <a href="students.html" class="nav-item"><i class="fas fa-user-graduate"></i><span>Students</span></a>
+      <a href="faculty.html" class="nav-item"><i class="fas fa-chalkboard-teacher"></i><span>Faculty</span></a>
+      <a href="academics.html" class="nav-item"><i class="fas fa-book"></i><span>Academics</span></a>
+      <a href="#" class="nav-item active"><i class="fas fa-flask"></i><span>Labs & Projects</span></a>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <div class="header">
+      <h2>LABS & PROJECTS</h2>
+      <div></div>
+      <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Logout</span></button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="dbms">DBMS Lab</button>
+      <button class="tab-btn" data-tab="ds">Data Structures Lab</button>
+      <button class="tab-btn" data-tab="cloud">Cloud Lab</button>
+    </div>
+
+    <section id="dbms" class="tab-panel">
+      <div class="lab-grid" id="dbmsGrid"></div>
+    </section>
+    <section id="ds" class="tab-panel" style="display:none">
+      <div class="lab-grid" id="dsGrid"></div>
+    </section>
+    <section id="cloud" class="tab-panel" style="display:none">
+      <div class="lab-grid" id="cloudGrid"></div>
+    </section>
+  </main>
+
+  <script>
+  const labs = {
+    dbms: [
+      { title:'SQL Basics', tags:['DDL','DML'], desc:'Create tables, insert, update, delete.' },
+      { title:'Joins & Aggregation', tags:['JOIN','GROUP BY'], desc:'Practice joins and aggregate queries.' },
+      { title:'ER to Relational', tags:['ER','Design'], desc:'Convert ER diagrams to relational schema.' }
+    ],
+    ds: [
+      { title:'Arrays & Linked Lists', tags:['Array','LinkedList'], desc:'Implement basic operations.' },
+      { title:'Stacks & Queues', tags:['Stack','Queue'], desc:'Infix to postfix, BFS, etc.' },
+      { title:'Trees & Graphs', tags:['BST','Graph'], desc:'Traversals and shortest paths.' }
+    ],
+    cloud: [
+      { title:'Intro to Cloud', tags:['IaaS','PaaS','SaaS'], desc:'Service models overview.' },
+      { title:'Container Basics', tags:['Docker'], desc:'Build and run containers.' },
+      { title:'CI/CD Concepts', tags:['Pipelines'], desc:'Automate build and deploy.' }
+    ]
+  };
+
+  function card(l){
+    return `
+      <div class="lab-card">
+        <h3>${l.title}</h3>
+        <p style="color:#555;margin-top:6px">${l.desc}</p>
+        <div class="lab-meta">${l.tags.map(t=>`<span class=\"chip\">${t}</span>`).join('')}</div>
+        <div class="actions">
+          <button class="btn primary">View Tasks</button>
+          <button class="btn secondary">Resources</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function render(section){
+    const gridId = section+"Grid";
+    const el = document.getElementById(gridId);
+    if (!el) return;
+    el.innerHTML = labs[section].map(card).join('');
+  }
+
+  function switchTab(to){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===to));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.style.display = p.id===to? 'block':'none');
+    render(to);
+    history.replaceState(null, '', `labs.html#${to}`);
+  }
+
+  // init
+  const initial = location.hash?.replace('#','') || 'dbms';
+  switchTab(initial);
+  document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click', ()=>switchTab(btn.dataset.tab)));
+  document.getElementById('logoutBtn').addEventListener('click', ()=>{ window.location.href = 'login.html'; });
+  </script>
+</body>
+</html>
+
+
