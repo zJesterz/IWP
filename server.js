@@ -4,7 +4,8 @@ const cors = require('cors');
 const fs = require('fs');
 const students = require('./students.json'); // student data
 const app = express();
-const port = 3000;
+// Use the port provided by the hosting platform (e.g., Railway)
+const port = process.env.PORT || 3000;
 
 // Enable CORS for all routes
 app.use(cors());
@@ -201,7 +202,7 @@ app.post('/register', (req, res) => {
   }
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`ERP System is running at http://localhost:${port}`);
+// Start the server (bind to 0.0.0.0 for cloud platforms)
+app.listen(port, '0.0.0.0', () => {
+  console.log(`ERP System is running on port ${port}`);
 });
