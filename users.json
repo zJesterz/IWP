@@ -54,5 +54,13 @@
     "username": "ash",
     "password": "123456",
     "createdAt": "2025-09-09T16:55:33.461Z"
+  },
+  {
+    "id": "1757438388924",
+    "fullname": "ashr",
+    "email": "ashr@gmail.com",
+    "username": "ashr",
+    "password": "123456",
+    "createdAt": "2025-09-09T17:19:48.924Z"
   }
 ]
