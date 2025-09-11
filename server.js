@@ -17,9 +17,9 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
 // --- HTML Page Routes ---
-// Route for the overview page (default homepage)
+// Route for the login page (default homepage)
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'overview.html'));
+  res.sendFile(path.join(__dirname, 'login.html'));
 });
 
 // Route for the overview page (explicit)
